@@ -20,7 +20,7 @@ def create_room():
 # Route to validate meeting
 @app.route("/api/validate-meeting")
 def validate_meeting():
-    roomName = request.args.get("roomName")
+    roomName = requests.args.get("roomName")
     if roomName:
         r = requests.get("https://"+METERED_DOMAIN + "/api/v1/room" + "?secretKey="+METERED_SECRET_KEY)
         data = r.json()
