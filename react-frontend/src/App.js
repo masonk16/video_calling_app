@@ -1,15 +1,31 @@
 import { useEffect, useState } from "react";
 import Join from "./Join";
 import Meeting from "./Meeting";
+import MeetingEnded from "./MeetingEnded";
 
 // Initializing Metered Video SDK
 const meteredMeeting = new window.Metered.Meeting();
+
+const API_LOCATION = "https://localhost:5000";
 
 function App() {
   // Will be set to true when user joins the meeting and update the UI
   const [meetingJoined, setMeetingJoined] = useState(false);
   // Storing onlineUsers, updating when a user joins or leaves the meeting
   const [onlineUsers, setOnlineUsers] = useState([]);
+
+  const [remoteTracks, setRemoteTracks] = useState([]);
+
+  const [username, setUsername] = useState("");
+
+  const [localVideoStream, setLocalVideoStream] = useState(null);
+
+  const [micShared, setMicShared] = useState(false);
+  const [cameraShared, setCameraShared] = useState(false);
+  const [screenShared, setScreenShared] = useState(false);
+  const [meetingEnded, setMeetingEnded] = useState(false);
+  const [roomName, setRoomName] = useState(null);
+  const [meetingInfo, setMeetingInfo] = useState({});
 
   // This useEffect hook will contain all event handlers
   // like participantJoined, participantLeft, etc.
@@ -82,6 +98,47 @@ function App() {
     } else {
       alert("Invalid roomName");
     }
+  }
+
+  // Handling Microphone Button
+  async function handleMicBtn() {
+    if (micShared) {
+      await meteredMeeting.stopAudio();
+      setMicShared(false);
+    } else {
+      await meteredMeeting.startAudio();
+      setMicShared(true);
+    }
+  }
+  // handles Camer button
+  async function handleCameraBtn() {
+    if (cameraShared) {
+      await meteredMeeting.stopVideo();
+      setLocalVideoStream(null);
+      setCameraShared(false);
+    } else {
+      await meteredMeeting.getLocalVideoStream();
+      setLocalVideoStream(stream);
+      setCameraShared(true);
+    }
+  }
+
+  // Handles Screen button
+  async function handelScreenBtn() {
+    if (!screenShared) {
+      await meteredMeeting.startScreenShare();
+      setScreenShared(false);
+    } else {
+      await meteredMeeting.stopVideo();
+      setCameraShared(false);
+      setScreenShared(true);
+    }
+  }
+
+  // handles leave button
+  async function handleLeaveBtn() {
+    await meteredMeeting.leaveMeeting();
+    setMeetingEnded(true)
   }
 
   return (
