@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import Join from "./Join";
 import Meeting from "./Meeting";
@@ -63,6 +64,7 @@ function App() {
   async function handleCreateMeeting(username) {
     // Call create room API
     const { data } = await axios.post(API_LOCATION + "/api/create/room");
+    const response = await axios.get(API_LOCATION + "/api/metered-domain");
     // Get metered domain and roomName from response
     const METERED_DOMAIN = response.data.METERED_DOMAIN;
     const roomName = data.roomName;
@@ -117,14 +119,15 @@ function App() {
       setLocalVideoStream(null);
       setCameraShared(false);
     } else {
-      await meteredMeeting.getLocalVideoStream();
+      await meteredMeeting.startVideo()
+      var stream = await meteredMeeting.getLocalVideoStream();
       setLocalVideoStream(stream);
       setCameraShared(true);
     }
   }
 
   // Handles Screen button
-  async function handelScreenBtn() {
+  async function handleScreenBtn() {
     if (!screenShared) {
       await meteredMeeting.startScreenShare();
       setScreenShared(false);
