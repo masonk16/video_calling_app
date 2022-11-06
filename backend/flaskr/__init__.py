@@ -14,7 +14,8 @@ METERED_DOMAIN = os.environ.get("METERED_DOMAIN")
 # API Route to create a meeting room
 @app.route("/api/create/room", methods=['POST'])
 def create_room():
-    return "Create Meeting Room"
+    r = requests.post("https://"+METERED_DOMAIN + "/api/v1/room" + "?secretKey="+METERED_SECRET_KEY)
+    return r.json()
 
 # Route to validate meeting
 @app.route("/api/validate-meeting")
