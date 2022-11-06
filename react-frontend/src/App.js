@@ -87,7 +87,18 @@ function App() {
   return (
     <div className="App">
       {meetingJoined ? (
-        <Meeting onlineUsers={onlineUsers}/>
+        <Meeting 
+          onlineUsers={onlineUsers}
+          handleMicBtn={handleMicBtn}
+          handleCameraBtn={handleCameraBtn}
+          handleScreenBtn={handleScreenBtn}
+          handleLeaveBtn={handleLeaveBtn}
+          localVideoStream={localVideoStream}
+          remoteTracks={remoteTracks}
+          username={username}
+          roomName={roomName}
+          meetingInfo={meetingInfo}
+        />
       ) : (
         <Join 
           handleCreateMeeting={handleCreateMeeting}
